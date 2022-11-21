@@ -8,7 +8,6 @@ import (
 	"github.com/ixtendio/gofre/handler"
 	"github.com/ixtendio/gofre/response"
 	"github.com/ixtendio/gofre/router/path"
-	"github.com/labstack/echo/v4"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
@@ -461,6 +460,7 @@ func benchmarkRoutes(b *testing.B, router http.Handler, useStaticRoutes bool) {
 	b.ResetTimer()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
+		//we don't reset the headers because the header writing produces heap allocations and, it is out of the benchmark scope
 		//w.Header().Del("Content-Type")
 		//w.Header().Del("X-Content-Type-Options")
 		w.Body.Reset()
@@ -494,6 +494,7 @@ func benchmarkRoutesConcurrent(b *testing.B, router http.Handler, useStaticRoute
 	b.RunParallel(func(pb *testing.PB) {
 		w := httptest.NewRecorder()
 		for pb.Next() {
+			//we don't reset the headers because the header writing produces heap allocations and, it is out of the benchmark scope
 			//w.Header().Del("Content-Type")
 			//w.Header().Del("X-Content-Type-Options")
 			w.Body.Reset()
